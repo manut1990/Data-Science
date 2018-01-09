@@ -1,11 +1,11 @@
 ###This project is based on Siraj Raval's YouTube Tutorial: "Predicting Stock Prices - Learn Python for Data Science #4"
-You can find the video here: https://www.youtube.com/watch?v=SSu00IRRraY
+'''You can find the video here: https://www.youtube.com/watch?v=SSu00IRRraY
 However, I had to do it differently as I had to use quandl as datasource instead of a Google Finance csv-file and also made changes to the approach.
 
 
-##The goal here is to create a machine learning model, that predicts stock prices on the bases of the stock prices of the last 30, 60 or 90 days
-##Therefore, I used SVM regression (linear, polynomial and RBF). RBF turns out to be best fitting model though overfitting might be an issue with this model.
-
+The goal here is to create a machine learning model, that predicts stock prices on the bases of the stock prices of the last 30, 60 or 90 days
+Therefore, I used SVM regression (linear, polynomial and RBF). RBF turns out to be best fitting model though overfitting might be an issue with this model.
+'''
 import numpy as np
 import pandas as pd
 import quandl
@@ -27,7 +27,7 @@ def get_data(ticker):
     return None
 
 def predict_prices(dates, prices, x):
-    dates= [i for i in range(0, len(dates_30))]
+    dates= [i for i in range(0, len(dates))]
     dates = np.array(dates)
     prices = np.array(prices)
     dates = dates.reshape((len(dates), 1))
@@ -35,18 +35,15 @@ def predict_prices(dates, prices, x):
      
     #load SVR models; low C for noisy data; gamma for rbf high as this means data is very complex
     svr_lin = SVR(kernel= 'linear', C= 1e3)
-    svr_poly = SVR(kernel= 'poly', C= 1e3, degree= 5) # degree = 2  to avoid overfitting
     svr_rbf = SVR(kernel= 'rbf', C= 1e3, gamma= 0.1)
     
     #Fit SVR models
     svr_lin.fit(dates, prices)
-    svr_poly.fit(dates, prices)
     svr_rbf.fit(dates, prices)
     
     #plot models
     plt.scatter(dates, prices, color='black', label='Data')
     plt.plot(dates, svr_lin.predict(dates), color='green', label='Linear model')
-    plt.plot(dates, svr_poly.predict(dates), color='blue', label='Polynomial model')
     plt.plot(dates, svr_rbf.predict(dates), color='orange', label='RBF model')
     
     plt.xlabel('Date')
@@ -55,7 +52,7 @@ def predict_prices(dates, prices, x):
     plt.legend()
     plt.show()
     
-    return svr_lin.predict(x)[0], svr_poly.predict(x)[0], svr_rbf.predict(x)[0], 
+    return svr_lin.predict(x)[0], svr_rbf.predict(x)[0], 
 
 #Helper function to get the right amount of days
 def get_data_for_x_days(dates, prices, days):
